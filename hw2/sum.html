@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Table with Regional Sum</title>
+</head>
+<body>
+    <table border="1" cellspacing="0" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Region</th>
+                <th>Model</th>
+                <th>Sales</th>
+            </tr>
+        </thead>
+        <tbody id="data-table">
+            <!-- Rows will be inserted dynamically -->
+        </tbody>
+    </table>
+
+    <script>
+        const data = [
+            { region: 'US', model: 'A', sales: 150 },
+            { region: 'US', model: 'B', sales: 120 },
+            { region: 'US', model: 'C', sales: 350 },
+            { region: 'EU', model: 'A', sales: 200 },
+            { region: 'EU', model: 'B', sales: 100 },
+            { region: 'EU', model: 'C', sales: 250 },
+            { region: 'CA', model: 'A', sales: 200 },
+            { region: 'CA', model: 'B', sales: 100 },
+            { region: 'CA', model: 'C', sales: 230 },
+            { region: 'CA', model: 'D', sales: 400 },
+        ];
+
+        const tableBody = document.getElementById('data-table');
+
+        // Group data by region
+        const regionGroups = {};
+        data.forEach(item => {
+            if (!regionGroups[item.region]) {
+                regionGroups[item.region] = [];
+            }
+            regionGroups[item.region].push(item);
+        });
+
+        // Build table with regional sum rows
+        for (const region in regionGroups) {
+            let regionalSum = 0;
+
+            // Add data rows
+            regionGroups[region].forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.region}</td>
+                    <td>${item.model}</td>
+                    <td>${item.sales}</td>
+                `;
+                tableBody.appendChild(row);
+
+                // Calculate sum for this region
+                regionalSum += item.sales;
+            });
+
+            // Add the regional sum row
+            const sumRow = document.createElement('tr');
+            sumRow.innerHTML = `
+                <td>${region}</td>
+                <td><strong>sum</strong></td>
+                <td><strong>${regionalSum}</strong></td>
+            `;
+            tableBody.appendChild(sumRow);
+        }
+    </script>
+</body>
+</html>
